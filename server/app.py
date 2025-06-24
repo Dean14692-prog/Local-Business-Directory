@@ -232,3 +232,50 @@ class ReviewResource(Resource):
     return make_response({"message": "Review created successfully"}, 201)
 api.add_resource(ReviewResource, '/reviews')
 
+class ReviewByIdResource(Resource):
+  def get(self, review_id):
+    review = Review.query.get(review_id)
+    if not review:
+      return make_response({"message": "Review not found"}, 404)
+    return make_response(review.to_dict(), 200)
+
+  def put(self, review_id):
+    data = request.get_json()
+    review = Review.query.get(review_id)
+    if not review:
+      return make_response({"message": "Review not found"}, 404)
+
+    review.rating = data['rating']
+    review.comment = data['comment']
+
+    db.session.commit()
+    return make_response({"message": "Review updated successfully"}, 200)
+
+  def delete(self, review_id):
+    review = Review.query.get(review_id)
+    if not review:
+      return make_response({"message": "Review not found"}, 404)
+
+    db.session.delete(review)
+    db.session.commit()
+    return make_response({"message": "Review deleted successfully"}, 200)
+  
+  def patch(self, review_id):
+    data = request.get_json()
+    review = Review.query.get(review_id)
+    if not review:
+      return make_response({"message": "Review not found"}, 404)
+
+    if 'rating' in data:
+      review.rating = data['rating']
+    if 'comment' in data:
+      review.comment = data['comment']
+
+    db.session.commit()
+    return make_response({"message": "Review updated successfully"}, 200)
+api.add_resource(ReviewByIdResource, '/reviews/<int:review_id>')
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True, port=5000)
