@@ -1,23 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+// App.js
+import React, { useState } from "react";
+import "./App.css";
+import Navbar from "./components/navbar/navbar";
+import SignupForm from "./components/signup /signup";
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`App ${isDark ? "dark" : ""}`}>
+      <Navbar isDark={isDark} toggleTheme={toggleTheme} />
+      <SignupForm isDark={isDark} />
     </div>
   );
 }
