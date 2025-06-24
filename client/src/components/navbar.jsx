@@ -1,6 +1,12 @@
-export default function Navbar() {
-  return;
-  <>
-    <h1> Business Profile</h1>
-  </>;
+
+import React from 'react'
+
+const navbar = () => {
+  return (
+    <div>
+      
+    </div>
+  )
 }
+
+export default navbar
