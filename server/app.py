@@ -3,7 +3,7 @@ from flask import Flask, make_response, request
 from flask_restful import Api, Resource
 from flask_migrate import Migrate
 
-from server.models import db, User, BusinessProfile, Category, Review
+from models import db, User, BusinessProfile, Category, Review
 import bcrypt 
 
 app = Flask(__name__)
@@ -44,6 +44,7 @@ class UserByIdResource(Resource):
 
   def put(self, user_id):
     data = request.get_json()
+    # data['role']
     user = User.query.get(user_id)
     if not user:
       return make_response({"message": "User not found"}, 404)
