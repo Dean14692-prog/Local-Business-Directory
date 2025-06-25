@@ -1,8 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import MetaData,Enum
 
+metadata = MetaData()
+db = SQLAlchemy(metadata=metadata)
 
-db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -12,9 +14,19 @@ class User(db.Model):
     email = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String)
     role = db.Column(db.Enum('consumer', 'business_owner', name='user_roles'), default='consumer')
-#relationship
-    reviews = db.relationship('Review', back_populates='author')
-    business_profile = db.relationship('BusinessProfile', uselist=False, back_populates='owner')
+
+    reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
+    business_profile = db.relationship('BusinessProfile', uselist=False, back_populates='user', cascade='all, delete-orphan')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "role": self.role,
+            "business_profile": self.business_profile.to_dict() if self.business_profile else None,
+            "reviews": [review.to_dict() for review in self.reviews]
+        }
 
 
 class BusinessProfile(db.Model):
@@ -27,10 +39,22 @@ class BusinessProfile(db.Model):
     description = db.Column(db.Text)
 
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
-    owner = db.relationship('User', back_populates='business_profile')
-#relationship
-    category = db.relationship('Category', back_populates='business_profile', uselist=False)
-    reviews = db.relationship('Review', back_populates='business_profile')
+    #relationship
+    user = db.relationship('User', back_populates='business_profile')
+
+    category = db.relationship('Category', back_populates='business_profile', uselist=False, cascade='all, delete-orphan')
+    reviews = db.relationship('Review', back_populates='business_profile', cascade='all, delete-orphan')
+#s
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "contact": self.contact,
+            "email": self.email,
+            "description": self.description,
+            "category": self.category.to_dict() if self.category else None,
+            "reviews": [review.to_dict() for review in self.reviews]
+        }
 
 
 class Category(db.Model):
@@ -39,8 +63,14 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     business_profile_id = db.Column(db.Integer, db.ForeignKey('business_profiles.id'), unique=True)
-#relationship
+
     business_profile = db.relationship('BusinessProfile', back_populates='category')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
 
 
 class Review(db.Model):
@@ -52,6 +82,18 @@ class Review(db.Model):
     rating = db.Column(db.Integer)
     comment = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-#relationship
+
     user = db.relationship('User', back_populates='reviews')
     business_profile = db.relationship('BusinessProfile', back_populates='reviews')
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "rating": self.rating,
+            "comment": self.comment,
+            "created_at": self.created_at.isoformat(),
+            "user": {
+                "id": self.user.id,
+                "name": self.user.name
+            }
+        }
