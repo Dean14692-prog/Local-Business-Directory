@@ -6,12 +6,13 @@ name = "pypi"
 [packages]
 Faker = "*"
 Flask = "*"
-Flask-Migrate = "*"
 Flask-SQLAlchemy = "*"
 importlib-resources = "*"
 ipdb = "*"
 sqlalchemy-serializer = "*"
 flask-restful = "*"
+flask-migrate = "*"
+flask-cors = "*"
 pipfile = "*"
 
 [requires]

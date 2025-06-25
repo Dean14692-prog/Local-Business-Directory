@@ -52,7 +52,7 @@ class BusinessProfile(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    phone = db.Column(db.Integer)
+    contact = db.Column(db.Integer)
     email = db.Column(db.String, unique=True, nullable=False)
     location = db.Column(db.String)
     description = db.Column(db.Text)
@@ -66,7 +66,7 @@ class BusinessProfile(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "phone": self.phone,
+            "contact": self.phone,
             "email": self.email,
             "location": self.location,
             "description": self.description,

@@ -3,7 +3,7 @@ from faker import Faker
 from app import app, db
 
 
-from models import User, BusinessProfile, Category, Review, Bookmark
+from models import User, BusinessProfile, Category, Review
 
 def run_seeds():
     with app.app_context():
