@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from sqlalchemy import MetaData,Enum
+from sqlalchemy import MetaData, Enum
 
 metadata = MetaData()
 db = SQLAlchemy(metadata=metadata)
@@ -13,7 +13,7 @@ class User(db.Model):
     name = db.Column(db.String)
     email = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String)
-    role = db.Column(db.Enum('consumer', 'business_owner', name='user_roles'), default='consumer')
+    role = db.Column(Enum('consumer', 'business_owner', name='user_roles'), default='consumer')
 
     reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
     business_profile = db.relationship('BusinessProfile', uselist=False, back_populates='user', cascade='all, delete-orphan')
@@ -28,6 +28,9 @@ class User(db.Model):
             "reviews": [review.to_dict() for review in self.reviews]
         }
 
+    def __repr__(self):
+        return f"<User id={self.id} name={self.name} email={self.email}>"
+
 
 class BusinessProfile(db.Model):
     __tablename__ = 'business_profiles'
@@ -39,12 +42,11 @@ class BusinessProfile(db.Model):
     description = db.Column(db.Text)
 
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
-    #relationship
     user = db.relationship('User', back_populates='business_profile')
 
     category = db.relationship('Category', back_populates='business_profile', uselist=False, cascade='all, delete-orphan')
     reviews = db.relationship('Review', back_populates='business_profile', cascade='all, delete-orphan')
-#s
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -55,6 +57,9 @@ class BusinessProfile(db.Model):
             "category": self.category.to_dict() if self.category else None,
             "reviews": [review.to_dict() for review in self.reviews]
         }
+
+    def __repr__(self):
+        return f"<BusinessProfile id={self.id} name={self.name} email={self.email}>"
 
 
 class Category(db.Model):
@@ -71,6 +76,9 @@ class Category(db.Model):
             "id": self.id,
             "name": self.name
         }
+
+    def __repr__(self):
+        return f"<Category id={self.id} name={self.name}>"
 
 
 class Review(db.Model):
@@ -97,3 +105,6 @@ class Review(db.Model):
                 "name": self.user.name
             }
         }
+
+    def __repr__(self):
+        return f"<Review id={self.id} rating={self.rating} user_id={self.user_id}>"
