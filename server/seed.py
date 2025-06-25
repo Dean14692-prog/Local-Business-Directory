@@ -38,7 +38,7 @@ def run_seeds():
             name="Cafe Good Vibes",
             phone=712345678,
             email="cafe@goodvibes.com",
-            location=fake.city(),
+            location="Nakuru",
             description="A cozy cafe with great coffee.",
             category_id=cafe_category.id,
         )
@@ -46,7 +46,7 @@ def run_seeds():
             name="Techie Repair",
             phone=787654321,    
             email="contact@techierepair.com",
-            location=fake.city(),
+            location="Nairobi",
             description="Gadget repair and more.",
             category_id=repair_category.id,
         )
