@@ -79,7 +79,7 @@ class UserByIdResource(Resource):
     
     db.session.commit()
     return make_response({"message": "User updated successfully"}, 200)
-api.add_resource(UserResource, '/users')
+api.add_resource(UserResource, '/users/<int:user_id>')
 
 class BusinessProfileResource(Resource):
   def get(self):
