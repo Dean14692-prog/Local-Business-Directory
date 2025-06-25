@@ -1,14 +1,14 @@
-import LandingPage from './components/LandingPage';
+// import LandingPage from './components/LandingPage';
 import './App.css';
-import Categories from './components/Categories';
+// import Categories from './components/Categories';
 
 function App() {
   return (
  
     <div>
-    <LandingPage />
+  {/* //   <LandingPage /> */}
     
-  </div>
+   </div>
    
   );
 }
